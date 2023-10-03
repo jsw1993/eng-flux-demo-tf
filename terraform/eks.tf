@@ -1,22 +1,22 @@
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "~> 18.0"
+  version = "18.31.2"
 
   cluster_name    = "cluster-a"
-  cluster_version = "1.23"
+  cluster_version = "1.28"
 
   cluster_endpoint_private_access = true
   cluster_endpoint_public_access  = true
 
-  cluster_endpoint_public_access_cidrs = ["88.97.45.21/32", "52.211.169.59/32"]
+  cluster_endpoint_public_access_cidrs = ["88.97.45.21/32"]
 
   cluster_addons = {
     coredns = {
-      resolve_conflicts = "OVERWRITE"
+      most_recent = true
     }
     kube-proxy = {}
     vpc-cni = {
-      resolve_conflicts = "OVERWRITE"
+      most_recent = true
     }
   }
 

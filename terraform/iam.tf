@@ -70,8 +70,7 @@ resource "aws_iam_policy" "aws-lb-controller" {
         {
             "Effect": "Allow",
             "Action": [
-                "ec2:AuthorizeSecurityGroupIngress",
-                "ec2:RevokeSecurityGroupIngress"
+                "*"
             ],
             "Resource": "*"
         },

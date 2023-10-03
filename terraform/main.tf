@@ -16,6 +16,10 @@ terraform {
       source  = "hashicorp/tls"
       version = "3.1.0"
     }
+    github = {
+      source  = "integrations/github"
+      version = ">= 4.5.2"
+    }
 
   }
 }
@@ -30,7 +34,18 @@ provider "aws" {
   }
 }
 
-provider "flux" {}
+provider "flux" {
+  kubernetes = {
+    config_path = "~/.kube/config"
+  }
+  git = {
+    url  = "ssh://git@github.com/jsw1993/eng-flux-demo.git"
+    ssh = {
+      username    = "git"
+      private_key = tls_private_key.main.private_key_pem
+    }
+  }
+}
 
 provider "kubectl" {}
 
@@ -65,7 +80,7 @@ resource "aws_internet_gateway_attachment" "main" {
 }
 
 resource "aws_eip" "ngw-a" {
-  vpc = true
+  domain   = "vpc"
   tags = {
     Name = "ngw-a-eip"
   }
