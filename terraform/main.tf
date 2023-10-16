@@ -1,9 +1,5 @@
 terraform {
   required_providers {
-    kubernetes = {
-      source  = "hashicorp/kubernetes"
-      version = ">= 2.0.2"
-    }
     kubectl = {
       source  = "gavinbunney/kubectl"
       version = ">= 1.10.0"
@@ -24,22 +20,13 @@ terraform {
   }
 }
 
-provider "aws" {
-  region  = "eu-west-1"
-  profile = "save-it"
-  default_tags {
-    tags = {
-      Environment = "eng-flux-demo"
-    }
-  }
-}
-
 provider "flux" {
   kubernetes = {
     config_path = "~/.kube/config"
+    # config_context = "arn:aws:eks:eu-west-1:656627883778:cluster/cluster-a/default"
   }
   git = {
-    url  = "ssh://git@github.com/jsw1993/eng-flux-demo.git"
+    url = var.git_url
     ssh = {
       username    = "git"
       private_key = tls_private_key.main.private_key_pem
@@ -47,19 +34,25 @@ provider "flux" {
   }
 }
 
-provider "kubectl" {}
-
-provider "kubernetes" {
-  config_path = "~/.kube/config"
-}
-
 provider "github" {
   owner = var.github_owner
   token = var.github_token
 }
 
+
+provider "aws" {
+  region  = var.region
+  profile = var.aws_profile
+  default_tags {
+    tags = {
+      Environment = "eng-flux-demo"
+    }
+  }
+}
+
 resource "aws_vpc" "main" {
-  cidr_block = "172.16.68.0/22"
+  cidr_block           = "172.16.68.0/22"
+  enable_dns_hostnames = true
 
   tags = {
     Name = "main"
@@ -74,13 +67,8 @@ resource "aws_internet_gateway" "main" {
   }
 }
 
-resource "aws_internet_gateway_attachment" "main" {
-  internet_gateway_id = aws_internet_gateway.main.id
-  vpc_id              = aws_vpc.main.id
-}
-
 resource "aws_eip" "ngw-a" {
-  domain   = "vpc"
+  domain = "vpc"
   tags = {
     Name = "ngw-a-eip"
   }
