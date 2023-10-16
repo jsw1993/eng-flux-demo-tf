@@ -25,3 +25,4 @@ The Terraform also adds the following
 - I think I've moved all the vars you have to change into the tfvars. Hopefully I haven't missed any
 - Make sure you're aware of how much this costs etc
 - You'll be prompted for a GitHub PAT to allow it to create the deploy key
+- You may need to comment out the Flux bootstrap in the flux.tf file till the cluster is built and you have the cluster in your kubeconfig

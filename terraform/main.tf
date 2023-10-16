@@ -23,7 +23,7 @@ terraform {
 provider "flux" {
   kubernetes = {
     config_path = "~/.kube/config"
-    # config_context = "arn:aws:eks:eu-west-1:656627883778:cluster/cluster-a/default"
+    config_context = "arn:aws:eks:eu-west-1:656627883778:cluster/cluster-a/default"
   }
   git = {
     url = var.git_url
